@@ -113,8 +113,10 @@ public class UCEconomy implements Economy {
 	@Override
 	public EconomyResponse depositPlayer(OfflinePlayer arg0, double arg1) {
 		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
-		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) arg1);
-		return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
+		if (UniversalAccounts.getInstance().creditAccount(accountNumber, (int) arg1)) {
+			return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
+		}
+		return new EconomyResponse(arg1, 0, ResponseType.FAILURE, "Deposit failed.");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -134,12 +136,12 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public String format(double arg0) {
-        DecimalFormat format = new DecimalFormat("#,##0.00");
-        String s = format.format(arg0);
-        if(s.endsWith(".")) {
-            s = s.substring(0, s.length()-1);
-        }
-        return s;
+		DecimalFormat format = new DecimalFormat("#,##0.00");
+		String s = format.format(arg0);
+		if (s.endsWith(".")) {
+			s = s.substring(0, s.length() - 1);
+		}
+		return s;
 	}
 
 	@Override
@@ -285,8 +287,10 @@ public class UCEconomy implements Economy {
 	@Override
 	public EconomyResponse withdrawPlayer(OfflinePlayer arg0, double arg1) {
 		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
-		UniversalAccounts.getInstance().debitAccount(accountNumber, (int) arg1);
-		return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
+		if (UniversalAccounts.getInstance().debitAccount(accountNumber, (int) arg1)) {
+			return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
+		}
+		return new EconomyResponse(arg1, 0, ResponseType.FAILURE, "Withdrawal failed");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -302,5 +306,4 @@ public class UCEconomy implements Economy {
 	public EconomyResponse withdrawPlayer(OfflinePlayer arg0, String arg1, double arg2) {
 		return withdrawPlayer(arg0, arg2);
 	}
-
 }
