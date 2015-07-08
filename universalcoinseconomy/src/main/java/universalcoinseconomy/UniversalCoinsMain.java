@@ -9,6 +9,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class UniversalCoinsMain extends JavaPlugin {
 
 	public void onEnable() {
+		setupEconomy();
+	}
+
+	private void setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") != null) {
 			final ServicesManager sm = getServer().getServicesManager();
 			sm.register(Economy.class, new UCEconomy(), this, ServicePriority.Highest);
