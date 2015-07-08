@@ -112,7 +112,7 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public EconomyResponse depositPlayer(OfflinePlayer arg0, double arg1) {
-		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
+		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(arg0.getUniqueId().toString());
 		if (UniversalAccounts.getInstance().creditAccount(accountNumber, (int) arg1)) {
 			return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
 		}
