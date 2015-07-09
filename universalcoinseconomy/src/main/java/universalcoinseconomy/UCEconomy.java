@@ -68,8 +68,7 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer arg0) {
-		UniversalAccounts.getInstance().addPlayerAccount(arg0.getUniqueId().toString());
-		return true;
+		return UniversalAccounts.getInstance().addPlayerAccount(arg0.getUniqueId().toString());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -160,8 +159,9 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public double getBalance(OfflinePlayer arg0) {
+		int playerBalance = new InventoryCoins(arg0.getPlayer()).balance();
 		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
-		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
+		return playerBalance + UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -194,8 +194,9 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public boolean has(OfflinePlayer arg0, double arg1) {
+		int playerBalance = new InventoryCoins(arg0.getPlayer()).balance();
 		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
-		int playerBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
+		playerBalance += UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 		if (playerBalance >= arg1) {
 			return true;
 		} else {
@@ -228,7 +229,7 @@ public class UCEconomy implements Economy {
 
 	@Override
 	public boolean hasAccount(OfflinePlayer arg0) {
-		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
+		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(arg0.getUniqueId().toString());
 		if (accountNumber != null && !accountNumber.isEmpty()) {
 			return true;
 		} else {
@@ -285,12 +286,21 @@ public class UCEconomy implements Economy {
 	}
 
 	@Override
-	public EconomyResponse withdrawPlayer(OfflinePlayer arg0, double arg1) {
-		String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(arg0.getUniqueId().toString());
-		if (UniversalAccounts.getInstance().debitAccount(accountNumber, (int) arg1)) {
-			return new EconomyResponse(arg1, 0, ResponseType.SUCCESS, null);
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
+		// grab any coins in inventory first
+		double residual = new InventoryCoins(player.getPlayer()).collectCoinPayment(amount);
+		// then grab remaining balance from account
+		if (residual > 0) {
+			String accountNumber = UniversalAccounts.getInstance().getPlayerAccount(player.getUniqueId().toString());
+			if (UniversalAccounts.getInstance().debitAccount(accountNumber, (int) residual)) {
+				return new EconomyResponse(amount, 0, ResponseType.SUCCESS, null);
+			} else {
+				//return coins taken since payment could not be completed
+				new InventoryCoins(player.getPlayer()).returnChange(amount - residual);
+				return new EconomyResponse(amount, 0, ResponseType.FAILURE, "Withdrawal failed");
+			}
 		}
-		return new EconomyResponse(arg1, 0, ResponseType.FAILURE, "Withdrawal failed");
+		return new EconomyResponse(amount, 0, ResponseType.SUCCESS, null);
 	}
 
 	@SuppressWarnings("deprecation")
