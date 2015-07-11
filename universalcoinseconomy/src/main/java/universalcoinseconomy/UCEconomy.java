@@ -295,7 +295,7 @@ public class UCEconomy implements Economy {
 			if (UniversalAccounts.getInstance().debitAccount(accountNumber, (int) residual)) {
 				return new EconomyResponse(amount, 0, ResponseType.SUCCESS, null);
 			} else {
-				//return coins taken since payment could not be completed
+				// return coins taken since payment could not be completed
 				new InventoryCoins(player.getPlayer()).returnChange(amount - residual);
 				return new EconomyResponse(amount, 0, ResponseType.FAILURE, "Withdrawal failed");
 			}

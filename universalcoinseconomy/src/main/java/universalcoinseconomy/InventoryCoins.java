@@ -30,39 +30,40 @@ public class InventoryCoins {
 		}
 		return value;
 	}
-	
+
 	public double collectCoinPayment(double amount) {
 		double coinsCollected = 0;
-		for (int i = 0;i < inventory.getSize();i++) {
+		for (int i = 0; i < inventory.getSize(); i++) {
 			int value = stackValue(inventory.getItem(i));
 			if (value > 0) {
 				coinsCollected += value;
 				inventory.clear(i);
 			}
 			if (coinsCollected >= amount) {
-				//return change
+				// return change
 				returnChange(coinsCollected - amount);
 				return 0;
 			}
 		}
 		return amount - coinsCollected;
 	}
-	
+
 	public void returnChange(double change) {
 		while (change > 0) {
 			// use logarithm to find largest cointype for coins being sent
 			int logVal = Math.min((int) (Math.log(change) / Math.log(9)), 4);
 			int stackSize = Math.min((int) (change / Math.pow(9, logVal)), 64);
 			// add a stack to the recipients inventory
-			HashMap<Integer, ItemStack> test = inventory.addItem(new ItemStack(Material.getMaterial(itemNames[logVal]), stackSize));
+			HashMap<Integer, ItemStack> test = inventory.addItem(new ItemStack(Material.getMaterial(itemNames[logVal]),
+					stackSize));
 			change -= stackSize * Math.pow(9, logVal);
-			//TODO throw excess coins to world when player inventory is full
+			// TODO throw excess coins to world when player inventory is full
 			if (test.size() > 0) {
 				Iterator<Entry<Integer, ItemStack>> it = test.entrySet().iterator();
-			    while (it.hasNext()) {
-			        Map.Entry<Integer, ItemStack> pair = (Map.Entry<Integer, ItemStack>)it.next();
+				while (it.hasNext()) {
+					Map.Entry<Integer, ItemStack> pair = (Map.Entry<Integer, ItemStack>) it.next();
 					player.getWorld().dropItemNaturally(player.getLocation(), pair.getValue());
-			        it.remove(); // avoids a ConcurrentModificationException
+					it.remove(); // avoids a ConcurrentModificationException
 
 				}
 			}

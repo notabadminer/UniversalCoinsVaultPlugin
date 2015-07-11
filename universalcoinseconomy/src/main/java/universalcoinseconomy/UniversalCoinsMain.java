@@ -2,14 +2,25 @@ package universalcoinseconomy;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import cpw.mods.fml.common.Loader;
+
 public class UniversalCoinsMain extends JavaPlugin {
 
 	public void onEnable() {
-		setupEconomy();
+		if (Bukkit.getServer().getName().contains("Cauldron")) {
+			if (Loader.isModLoaded("universalcoins")) {
+				setupEconomy();
+			} else {
+				System.out.println("Universal Coins: Forge mod 1.7.10-1.6.21+ not detected. Initialization failed.");
+			}
+		} else {
+			System.out.println("Universal Coins: Cauldron server not detected. Initialization failed.");
+		}
 	}
 
 	private void setupEconomy() {
@@ -18,7 +29,7 @@ public class UniversalCoinsMain extends JavaPlugin {
 			sm.register(Economy.class, new UCEconomy(), this, ServicePriority.Highest);
 			System.out.println("Universal Coins: Registered Vault interface.");
 		} else {
-			System.out.println("Universal Coins: Vault not found. Initialization failed.");
+			System.out.println("Universal Coins: Vault not detected. Initialization failed.");
 		}
 	}
 }
