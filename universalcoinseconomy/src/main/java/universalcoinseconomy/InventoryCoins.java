@@ -54,8 +54,7 @@ public class InventoryCoins {
 			int logVal = Math.min((int) (Math.log(change) / Math.log(9)), 4);
 			int stackSize = Math.min((int) (change / Math.pow(9, logVal)), 64);
 			// add a stack to the recipients inventory
-			HashMap<Integer, ItemStack> test = inventory.addItem(new ItemStack(Material.getMaterial(itemNames[logVal]),
-					stackSize));
+			HashMap<Integer, ItemStack> test = inventory.addItem(new ItemStack(Material.getMaterial(itemNames[logVal])));
 			change -= stackSize * Math.pow(9, logVal);
 			// TODO throw excess coins to world when player inventory is full
 			if (test.size() > 0) {

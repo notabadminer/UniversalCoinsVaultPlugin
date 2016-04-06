@@ -1,13 +1,12 @@
 package universalcoinseconomy;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import cpw.mods.fml.common.Loader;
+import net.milkbowl.vault.economy.Economy;
 
 public class UniversalCoinsMain extends JavaPlugin {
 

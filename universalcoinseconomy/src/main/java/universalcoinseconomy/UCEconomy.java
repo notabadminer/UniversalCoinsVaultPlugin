@@ -3,14 +3,13 @@ package universalcoinseconomy;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import universalcoins.util.UniversalAccounts;
 
 public class UCEconomy implements Economy {

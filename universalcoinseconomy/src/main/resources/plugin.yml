@@ -3,6 +3,6 @@
     description: This plugin is for use on Cauldron servers and depends on the Forge mod Universal Coins in order to operate correctly.
     website: http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2076302-universal-coins
     main: universalcoinseconomy.UniversalCoinsMain
-    version: 0.9.3
+    version: 1.6.40
     depend: [Vault]
     load: STARTUP
